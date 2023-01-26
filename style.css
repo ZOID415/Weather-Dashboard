@@ -1,0 +1,7 @@
+
+.weather-result-template{
+    display: flex;
+}
+.card {
+    background: red;
+}
