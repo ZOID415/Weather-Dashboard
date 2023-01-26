@@ -1,3 +1,4 @@
+var cityData = {}
 const weatherLookup = function (event) {
   event.preventDefault();
 
@@ -13,6 +14,7 @@ const weatherLookup = function (event) {
     .then(function (data) {
       console.log(data);
       current(data);
+      cityData=data
       forecastLookup(data.coord.lat, data.coord.lon);
 
       var container = $("#current");
@@ -41,6 +43,7 @@ const forecastLookup = function (lat, lon) {
     });
 };
 const current = function (data) {
+  
   $("#name").text(data.name);
   $("#tempurature").text(data.main.temp);
   $("#wind").text(data.wind.speed);
@@ -50,6 +53,8 @@ const current = function (data) {
 };
 
 const forecast = function (data) {
+  
+  // console.log(localTime, data, cityData);
   var daysArray = [
     data.list[0],
     data.list[8],
@@ -59,16 +64,21 @@ const forecast = function (data) {
   ];
   var template = $(".forecast");
   daysArray.forEach(function (day) {
+    var localTime = dayjs((day.dt + data.city.timezone) * 1000).format(
+      "MM/DD/YYYY"
+    );
     var card = $("<div>", { class: "card" });
-
+var date =$("<p>")
     var wind = $("<p>");
     var temp = $("<p>");
     var humidity = $("<p>");
     wind.text(day.wind.speed + "MPH");
     humidity.text(day.main.humidity + "%");
     temp.text(day.main.feels_like + "F");
+    date.text(localTime)
     card.appendTo(template);
-    card.append(wind, temp, humidity);
+    card.append(wind, temp, humidity, date);
+    
     template.append(card);
   });
 };
